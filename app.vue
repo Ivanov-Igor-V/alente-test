@@ -3,7 +3,7 @@
     <TheHeader class="products__header" />
     <div class="products__main">
       <TheFilter class="products__filter" />
-      <TheProducts :data="data" />
+      <TheProducts />
     </div>
   </div>
 </template>
@@ -14,7 +14,11 @@ export default {
   setup() {
     const { $store } = useNuxtApp()
     const { public: publicConfig } = useRuntimeConfig();
-    const { data, error } = useFetch(`${publicConfig.API_BASE_URL}/product`)
+    const { data, error } = useFetch(`${publicConfig.API_BASE_URL}/product`, {
+      onResponse({ response }) {
+        $store.commit('writeProducts', response._data)
+      },
+    })
     return { data }
   }
 }

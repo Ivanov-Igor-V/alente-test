@@ -1,7 +1,7 @@
 <template >
     <div class="products">
         <div class="pre-header">
-            <div>#count results found in 5ms </div>
+            <div>{{ $store.state.products.length }} results found in 5ms </div>
             <div class="pre-header__right-side">
                 <TheCard padding="0px">
                     <select>
@@ -17,30 +17,41 @@
                 </TheCard>
             </div>
         </div>
-        <el-input v-model="searchInput" :style="{ marginBottom: '26px' }" placeholder="Search hear">
+
+        <TheInput class="products__search" @input="changeSearchString" width="100%">
             <template #suffix>
-                <UIIcon svg="/icons/search.svg" />
+                <img src="/icons/search.svg" />
             </template>
-        </el-input>
+        </TheInput>
+
         <div class="products__table">
-            <ProductCard v-for="product in data" :key="product.id" :data="product" />
+            <ProductCard v-for="product in $store.getters.getSplittedProducts(productsOnPage)[currentPage - 1]"
+                :key="product.id" :data="product" />
         </div>
-        <ThePagination />
+        <ThePagination :pageCount="$store.getters.getSplittedProducts(productsOnPage).length" :activePage="currentPage"
+            v-if="$store.getters.getProducts.length" @changePage="currentPage = $event" @minusPage="currentPage--"
+            @plusPage="currentPage++" />
+        <div v-else> No results </div>
     </div>
 </template>
 <script>
 export default {
     name: "TheProducts",
-    props: {
-        data: {
-            type: Array,
-            default: () => ([]),
-        }
-    },
     setup() {
+        const { $store } = useNuxtApp()
+        const productsOnPage = ref(6)
         const searchInput = ref('')
+        const currentPage = ref(1)
+        const input = ref(null)
+        const changeSearchString = ({ target }) => {
+            $store.commit('changeSearchString', target.value)
+        }
         return {
-            searchInput
+            productsOnPage,
+            searchInput,
+            currentPage,
+            input,
+            changeSearchString
         }
     }
 }
@@ -57,6 +68,10 @@ export default {
         grid-template-columns: repeat(3, 1fr);
         gap: 31px;
         margin-bottom: 37px;
+    }
+
+    &__search {
+        margin-bottom: 26px;
     }
 }
 

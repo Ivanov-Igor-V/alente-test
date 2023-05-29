@@ -2,7 +2,7 @@
     <TheCard padding="0px" :height="'486px'">
         <div class="product-card">
             <div class="product-card__image">
-                <img :src="data?.image" alt="no picture">
+                <img :src="data?.image" width="232" height="272" alt="no picture">
             </div>
             <div>
 
