@@ -3,15 +3,12 @@
         <TheCard :padding="28" width="389px">
             <div class="filter__range">
                 <h4 class="filter__header">Multi Range</h4>
-                <el-checkbox-group class="" v-model="multiRange">
-                    <el-checkbox label="$10" />
-                    <el-checkbox label="$10-$100" size="large" />
-                    <el-checkbox label="$100-$500" size="large" />
-                    <el-checkbox label="$500" size="large" />
-                    <el-checkbox label="All" size="large" />
+                <el-checkbox-group class="" v-model="multiRange" @change="multiRangeHandler">
+                    <el-checkbox v-for="(range, index) of priceRange" :Key="index" :label="range.label" />
                 </el-checkbox-group>
             </div>
             <el-divider />
+            <!-- По макету не понятно, как должен работать слайдер -->
             <div class="filter__slider">
                 <div class="slider-header">
                     <h4>Slider</h4>
@@ -23,11 +20,13 @@
             <div v-if="categories">
                 <h4 class="filter__header">Category</h4>
                 <div class="table">
-                    <el-checkbox-group v-model="categoryCheckList">
+                    <el-checkbox-group v-model="categoryCheckList" @change="changeCategoryIds">
                         <el-checkbox :label="category.name" v-for="category of categories" :key="category.id" />
                     </el-checkbox-group>
                     <div class="table__count">
-                        <div v-for="count of categories?.length">#count</div>
+                        <div v-for="(count, index) of categories?.length" :key="index"> {{
+                            $store.getters.getProductsOfCategory(index + 1).length
+                        }}</div>
                     </div>
                 </div>
             </div>
@@ -35,11 +34,13 @@
             <div v-if="brands">
                 <h4 class="filter__header">Brand</h4>
                 <div class="table">
-                    <el-checkbox-group v-model="brandCheckList">
+                    <el-checkbox-group v-model="brandCheckList" @change="changeBrandIds">
                         <el-checkbox :label="brand.title" v-for="brand of brands" :key="brand.id" />
                     </el-checkbox-group>
                     <div class="table__count">
-                        <div v-for="count of categories?.length">#count</div>
+                        <div v-for="(count, index) of brands?.length" :key="index">{{
+                            $store.getters.getProductsOfBrand(index + 1).length
+                        }}</div>
                     </div>
                 </div>
             </div>
@@ -55,7 +56,9 @@
                     </div>
 
                     <div class="table__count">
-                        <div v-for="(count, index) of 5" :key="index">#count</div>
+                        <div v-for="(count, index) of 5" :key="index">{{ $store.getters.getProductsOfRating(5 -
+                            index).length }}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -68,22 +71,53 @@
 export default {
     name: "TheFilter",
     setup() {
+        const { $store } = useNuxtApp();
         const silderValue = ref(0);
+        const priceRange = [
+            { label: '$10', value: [0, 10] },
+            { label: '$10-$100', value: [10, 100] },
+            { label: '$100-$500', value: [100, 500] },
+            { label: '$500', value: [500] },
+            { label: 'All', value: [0] },
+        ]
         const multiRange = ref([]);
         const priseCheckList = ref([]);
         const categoryCheckList = ref([]);
         const brandCheckList = ref([]);
         const { public: publicConfig } = useRuntimeConfig();
-        const { data: categories, error: categoryError } = useFetch(`${publicConfig.API_BASE_URL}/category`)
-        const { data: brands, error: brandError } = useFetch(`${publicConfig.API_BASE_URL}/brand`)
+        const { data: categories, error: categoryError } = useFetch(`${publicConfig.API_BASE_URL}/category`);
+        const { data: brands, error: brandError } = useFetch(`${publicConfig.API_BASE_URL}/brand`);
+
+        // Далее приходится обрабатывать модели групп чекбоксов, тк element-plus сделал все коряво, писать свой компонент нет времени
+        const changeBrandIds = (e) => {
+            const arr = []
+            brands.value.forEach(el => e.includes(el.title) && arr.push(el.id))
+            $store.commit('changeBrandIds', arr)
+        }
+        const changeCategoryIds = (e) => {
+            const arr = []
+            categories.value.forEach(el => e.includes(el.name) && arr.push(el.id))
+            $store.commit('changeCategoryIds', arr)
+        }
+
+        const multiRangeHandler = (e) => {
+            const arr = []
+            priceRange.forEach(el => e.includes(el.label) && arr.push(el.value))
+            $store.commit('changeMultiRange', arr)
+        }
+
         return {
+            priceRange,
             silderValue,
             priseCheckList,
             categoryCheckList,
             brandCheckList,
             categories,
             brands,
-            multiRange
+            multiRange,
+            changeBrandIds,
+            changeCategoryIds,
+            multiRangeHandler
         }
     }
 }

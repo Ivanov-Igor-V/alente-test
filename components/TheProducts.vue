@@ -9,9 +9,20 @@
                         <option label="Какая-то опция" />
                     </select>
                 </TheCard>
-                <TheCard padding="11px">
-                    <UIIcon svg="/icons/grid.svg" />
-                </TheCard>
+                <el-dropdown trigger="click">
+                    <TheCard padding="11px">
+                        <UIIcon svg="/icons/grid.svg" />
+                    </TheCard>
+                    <template #dropdown>
+                        <el-dropdown-menu>
+                            <el-dropdown-item @click="changeGridMode(mode)" v-for="(mode, index) in gridModes"
+                                :key="index">{{
+                                    mode[0] }}x{{ mode[1]
+    }}</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </template>
+                </el-dropdown>
+
                 <TheCard padding="11px">
                     <UIIcon svg="/icons/list.svg" />
                 </TheCard>
@@ -24,34 +35,43 @@
             </template>
         </TheInput>
 
-        <div class="products__table">
+        <div class="products__table" :style="{ 'grid-template-columns': `repeat(${currentGridMode[0]}, 1fr)` }">
             <ProductCard v-for="product in $store.getters.getSplittedProducts(productsOnPage)[currentPage - 1]"
                 :key="product.id" :data="product" />
         </div>
         <ThePagination :pageCount="$store.getters.getSplittedProducts(productsOnPage).length" :activePage="currentPage"
-            v-if="$store.getters.getProducts.length" @changePage="currentPage = $event" @minusPage="currentPage--"
-            @plusPage="currentPage++" />
-        <div v-else> No results </div>
+            v-if="$store.getters.getProducts.length && ($store.getters.getProducts.length > productsOnPage)"
+            @changePage="currentPage = $event" @minusPage="currentPage--" @plusPage="currentPage++" />
+        <div v-if="!$store.getters.getProducts.length"> No results </div>
     </div>
 </template>
 <script>
 export default {
     name: "TheProducts",
     setup() {
-        const { $store } = useNuxtApp()
-        const productsOnPage = ref(6)
-        const searchInput = ref('')
-        const currentPage = ref(1)
-        const input = ref(null)
+        const { $store } = useNuxtApp();
+        const productsOnPage = computed(() => currentGridMode.value[1])
+        const searchInput = ref('');
+        const currentPage = ref(1);
+        const input = ref(null);
+        const gridModes = [[3, 6], [4, 8]];
+        const currentGridMode = ref(gridModes[0])
         const changeSearchString = ({ target }) => {
             $store.commit('changeSearchString', target.value)
+        }
+
+        const changeGridMode = (mode) => {
+            currentGridMode.value = mode
         }
         return {
             productsOnPage,
             searchInput,
             currentPage,
             input,
-            changeSearchString
+            changeSearchString,
+            gridModes,
+            currentGridMode,
+            gridModes, changeGridMode
         }
     }
 }
@@ -65,7 +85,6 @@ export default {
 
     &__table {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
         gap: 31px;
         margin-bottom: 37px;
     }
