@@ -3,22 +3,29 @@
         <div class="pre-header">
             <div>{{ $store.state.products.length }} results found in 5ms </div>
             <div class="pre-header__right-side">
-                <TheCard padding="0px">
-                    <select>
-                        <option value="" selected disabled hidden>Default</option>
-                        <option label="Какая-то опция" />
-                    </select>
-                </TheCard>
+                <el-dropdown trigger="click">
+                    <TheCard padding="10px 15px 13px" width="142px" :style="{ cursor: 'pointer' }">
+                        <div class="pre-header__dropdown-toggler">
+                            <p>Default</p>
+                            <UIIcon :width="10" :height="5" svg="/icons/chevron-down.svg" />
+                        </div>
+                    </TheCard>
+
+                    <template #dropdown>
+                        <el-dropdown-menu>
+                            <el-dropdown-item> Я не знаю, что ключает этот дропдаун</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </template>
+                </el-dropdown>
                 <el-dropdown trigger="click">
                     <TheCard padding="11px">
                         <UIIcon svg="/icons/grid.svg" />
                     </TheCard>
                     <template #dropdown>
                         <el-dropdown-menu>
-                            <el-dropdown-item @click="changeGridMode(mode)" v-for="(mode, index) in gridModes"
-                                :key="index">{{
-                                    mode[0] }}x{{ mode[1]
-    }}</el-dropdown-item>
+                            <el-dropdown-item @click="changeGridMode(mode)" v-for="(mode, index) in gridModes" :key="index">
+                                {{ mode[0] }}x{{ mode[1] }}
+                            </el-dropdown-item>
                         </el-dropdown-menu>
                     </template>
                 </el-dropdown>
@@ -101,6 +108,15 @@ export default {
     width: 100%;
     justify-content: space-between;
     margin-bottom: 22px;
+
+    &__dropdown-toggler {
+        display: inline-flex;
+        justify-content: space-between;
+        width: 100%;
+        align-items: center;
+        font-size: 14px;
+        line-height: 17px;
+    }
 
     &__right-side {
         display: inline-flex;
