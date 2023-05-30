@@ -2,7 +2,7 @@
     <div class="pagination">
         <div class="pagination__section">
             <button @click="decreasePageHandler" class="pagination__button">
-                <UIIcon :width="6" :height="12" svg="/icons/chevron-left.svg" />
+                <Icon :width="6" :height="12" svg="/icons/chevron-left.svg" />
             </button>
         </div>
         <div class="pagination__section">
@@ -15,7 +15,7 @@
         </div>
         <div class="pagination__section">
             <button class="pagination__button" @click="increasePageHandler">
-                <UIIcon :width="6" :height="12" svg="/icons/chevron-right.svg" />
+                <Icon :width="6" :height="12" svg="/icons/chevron-right.svg" />
             </button>
         </div>
     </div>

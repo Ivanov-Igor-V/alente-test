@@ -18,13 +18,13 @@
                 <div class="product-card__footer">
                     <TheButton type="secondary" borderRadius="0px 0px 0px 8px">
                         <template #icon>
-                            <UIIcon svg="/icons/heart.svg" />
+                            <Icon svg="/icons/heart.svg" />
                         </template>
                         WISHLIST
                     </TheButton>
                     <TheButton borderRadius="0px 0px 8px 0px">
                         <template #icon>
-                            <UIIcon svg="/icons/shopping-bag.svg" />
+                            <Icon svg="/icons/shopping-bag.svg" />
                         </template>
                         ADD TO CARD
                     </TheButton>
@@ -34,7 +34,6 @@
     </TheCard>
 </template>
 <script>
-import TheButton from './UI/TheButton.vue';
 
 export default {
     name: "ProductCard",
@@ -45,7 +44,6 @@ export default {
             required: true
         }
     },
-    components: { TheButton }
 }
 </script>
 <style lang="scss">

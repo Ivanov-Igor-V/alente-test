@@ -7,7 +7,7 @@
                     <TheCard padding="10px 15px 13px" width="142px" :style="{ cursor: 'pointer' }">
                         <div class="pre-header__dropdown-toggler">
                             <p>Default</p>
-                            <UIIcon :width="10" :height="5" svg="/icons/chevron-down.svg" />
+                            <Icon :width="10" :height="5" svg="/icons/chevron-down.svg" />
                         </div>
                     </TheCard>
 
@@ -19,7 +19,7 @@
                 </el-dropdown>
                 <el-dropdown trigger="click">
                     <TheCard padding="11px">
-                        <UIIcon svg="/icons/grid.svg" />
+                        <Icon svg="/icons/grid.svg" />
                     </TheCard>
                     <template #dropdown>
                         <el-dropdown-menu>
@@ -31,7 +31,7 @@
                 </el-dropdown>
 
                 <TheCard padding="11px">
-                    <UIIcon svg="/icons/list.svg" />
+                    <Icon svg="/icons/list.svg" />
                 </TheCard>
             </div>
         </div>

@@ -2,13 +2,13 @@
     <TheCard padding="14px 20px 14px 27px">
         <div class="header">
             <div class="header__side">
-                <UIIcon svg="/icons/mail.svg" />
-                <UIIcon svg="/icons/calendar.svg" />
-                <UIIcon svg="/icons/star.svg" />
+                <Icon svg="/icons/mail.svg" />
+                <Icon svg="/icons/calendar.svg" />
+                <Icon svg="/icons/star.svg" />
             </div>
             <div class="header__side">
-                <UIIcon svg="/icons/bell.svg" />
-                <UIIcon svg="/icons/search.svg" />
+                <Icon svg="/icons/bell.svg" />
+                <Icon svg="/icons/search.svg" />
                 <div class="header__user">
                     <div>
                         <p class="header__name">John Doe</p>
