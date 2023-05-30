@@ -1,9 +1,12 @@
 <template>
   <div class="products">
     <TheHeader class="products__header" />
-    <div class="products__main">
+    <div v-if="data" class="products__main">
       <TheFilter class="products__filter" />
       <TheProducts />
+    </div>
+    <div v-else>
+      Loading...
     </div>
   </div>
 </template>
@@ -16,7 +19,9 @@ export default {
     const { public: publicConfig } = useRuntimeConfig();
     const { data, error } = useFetch(`${publicConfig.API_BASE_URL}/product`, {
       onResponse({ response }) {
-        $store.commit('writeProducts', response._data)
+        $store.commit('writeProducts', response._data);
+        const highestPrice = $store.getters.getHighestPriceProduct
+        $store.commit('changePriceRange', [0, highestPrice]);
       },
     })
     return { data }

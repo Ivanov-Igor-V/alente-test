@@ -6,12 +6,16 @@ const store = createStore({
       searchString: '',
       brandIds: [],
       categoryIds: [],
-      multiRange: []
+      priceRange: [0, 100],
+      keyOfSort: ''
     };
   },
   mutations: {
     writeProducts(state, payload) {
       state.products = payload
+    },
+    changePriceRange(state, payload) {
+      state.priceRange = payload
     },
     changeSearchString(state, payload) {
       state.searchString = payload
@@ -22,28 +26,32 @@ const store = createStore({
     changeCategoryIds(state, payload) {
       state.categoryIds = payload
     },
-    changeMultiRange(state, payload) {
-      state.multiRange = payload
+    changePriceRange(state, payload) {
+      state.priceRange = payload
+    },
+    changeKeyOfSort(state, payload) {
+      state.keyOfSort = payload
     },
   },
   getters: {
-    getProducts: state => {
-      let arr = [...state.products]
+    getProducts: (state,getters) => {
+      let arr = state.products.filter(product => {
+       if ( product.price >= state.priceRange[0] && product.price <= state.priceRange[1]) return true
+      })
       if (state.searchString) {arr = arr.filter(product => product.title.toUpperCase().match(state.searchString.toUpperCase()))}
       if (state.brandIds.length) {arr = arr.filter(product => state.brandIds.includes(product.brandId))}
       if (state.categoryIds.length) {arr = arr.filter(product => state.categoryIds.includes(product.categoryId))}
-      if (state.multiRange.length) {
-        //TODO Тут нужно переписать логику - некорректна ситуация с несколькими условиями
-        state.multiRange.forEach(el => {
-          if (el.length === 1) {
-          return arr = arr.filter(product => product.price > el[0] )
-          } 
-          else arr = arr.filter(product => product.price > el[0] && product.price < el[1])
-        })
-      }
+      if (state.keyOfSort) { console.log('keyOfSort'); arr = getters.getProductsSortedByKey(state.keyOfSort)}
       return arr 
     },
+    getHighestPriceProduct: (state) => state.products[state.products.length - 1].price,
     getProductsOfCategory: state => categoryId => state.products.filter(product => +product.categoryId === categoryId),
+    getProductsSortedByKey: (state) => key => {
+      let arr = state.products    
+        arr = state.products.sort((product1, product2) => product1[key] > product2[key] ? 1 : -1 );
+      return arr
+
+    },
     getProductsOfBrand: state => brandId => state.products.filter(product =>  +product.brandId === brandId),
     getProductsOfRating: state => rating => state.products.filter(product =>  +product.rating >= rating && +product.rating < rating + 1),
     getSplittedProducts: (state,getters) => (itemsOnPage) => {

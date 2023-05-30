@@ -1,20 +1,13 @@
 <template>
     <aside class="filter">
         <TheCard :padding="28" width="389px">
-            <div class="filter__range">
-                <h4 class="filter__header">Multi Range</h4>
-                <el-checkbox-group class="" v-model="multiRange" @change="multiRangeHandler">
-                    <el-checkbox v-for="(range, index) of priceRange" :Key="index" :label="range.label" />
-                </el-checkbox-group>
-            </div>
-            <el-divider />
-            <!-- По макету не понятно, как должен работать слайдер -->
             <div class="filter__slider">
                 <div class="slider-header">
                     <h4>Slider</h4>
-                    <p>1.99-4098</p>
+                    <p>{{ lowestPrice }} - {{ $store.getters.getHighestPriceProduct }}</p>
                 </div>
-                <el-slider v-model="silderValue" />
+                <el-slider @change="changePriceRange" :min="0" :max="$store.getters.getHighestPriceProduct"
+                    v-model="priceRange" range />
             </div>
             <el-divider />
             <div v-if="categories">
@@ -72,14 +65,8 @@ export default {
     name: "TheFilter",
     setup() {
         const { $store } = useNuxtApp();
-        const silderValue = ref(0);
-        const priceRange = [
-            { label: '$10', value: [0, 10] },
-            { label: '$10-$100', value: [10, 100] },
-            { label: '$100-$500', value: [100, 500] },
-            { label: '$500', value: [500] },
-            { label: 'All', value: [0] },
-        ]
+        const priceRange = ref(0);
+        const lowestPrice = computed(() => $store.state.products[0].price)
         const multiRange = ref([]);
         const priseCheckList = ref([]);
         const categoryCheckList = ref([]);
@@ -100,15 +87,14 @@ export default {
             $store.commit('changeCategoryIds', arr)
         }
 
-        const multiRangeHandler = (e) => {
-            const arr = []
-            priceRange.forEach(el => e.includes(el.label) && arr.push(el.value))
-            $store.commit('changeMultiRange', arr)
+        const changePriceRange = (e) => {
+            console.log(e);
+            $store.commit('changePriceRange', e)
         }
 
         return {
             priceRange,
-            silderValue,
+            priceRange,
             priseCheckList,
             categoryCheckList,
             brandCheckList,
@@ -117,7 +103,8 @@ export default {
             multiRange,
             changeBrandIds,
             changeCategoryIds,
-            multiRangeHandler
+            changePriceRange,
+            lowestPrice,
         }
     }
 }

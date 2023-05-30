@@ -1,22 +1,18 @@
 <template >
     <div class="products">
+        <div> {{ $store.state.keyOfSort }}</div>
         <div class="pre-header">
             <div>{{ $store.state.products.length }} results found in 5ms </div>
             <div class="pre-header__right-side">
-                <el-dropdown trigger="click">
-                    <TheCard padding="10px 15px 13px" width="142px" :style="{ cursor: 'pointer' }">
-                        <div class="pre-header__dropdown-toggler">
-                            <p>Default</p>
-                            <Icon :width="10" :height="5" svg="/icons/chevron-down.svg" />
-                        </div>
-                    </TheCard>
+                <TheCard padding="10px 15px 13px" width="142px" :style="{ cursor: 'pointer' }">
+                    <el-select v-model="filterSelectValue" @change="filterSelectHandler" placeholder="Default" size="large">
+                        <el-option label="Цена" value="price" />
+                        <el-option label="Оценка" value="rating" />
+                        <el-option label="Название" value="title" />
+                    </el-select>
+                </TheCard>
 
-                    <template #dropdown>
-                        <el-dropdown-menu>
-                            <el-dropdown-item> Я не знаю, что ключает этот дропдаун</el-dropdown-item>
-                        </el-dropdown-menu>
-                    </template>
-                </el-dropdown>
+
                 <el-dropdown trigger="click">
                     <TheCard padding="11px">
                         <Icon svg="/icons/grid.svg" />
@@ -59,6 +55,7 @@ export default {
         const { $store } = useNuxtApp();
         const productsOnPage = computed(() => currentGridMode.value[1])
         const searchInput = ref('');
+        const filterSelectValue = ref('');
         const currentPage = ref(1);
         const input = ref(null);
         const gridModes = [[3, 6], [4, 8]];
@@ -70,15 +67,22 @@ export default {
         const changeGridMode = (mode) => {
             currentGridMode.value = mode
         }
+
+        const filterSelectHandler = (e) => {
+            $store.commit('changeKeyOfSort', e)
+        }
         return {
             productsOnPage,
             searchInput,
+            filterSelectValue,
             currentPage,
             input,
             changeSearchString,
             gridModes,
             currentGridMode,
-            gridModes, changeGridMode
+            gridModes,
+            changeGridMode,
+            filterSelectHandler
         }
     }
 }
