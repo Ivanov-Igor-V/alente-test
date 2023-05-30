@@ -58,7 +58,7 @@ const store = createStore({
       if (state.brandIds.length) {arr = arr.filter(product => state.brandIds.includes(product.brandId))}
       if (state.categoryIds.length) {arr = arr.filter(product => state.categoryIds.includes(product.categoryId))}
       if (state.grade) {arr = arr.filter(product => product.rating >= state.grade && product.rating <= state.grade + 1)}
-      if (state.keyOfSort) { console.log('keyOfSort'); arr = getters.getProductsSortedByKey(state.keyOfSort)}
+      if (state.keyOfSort) { arr = getters.getProductsSortedByKey(state.keyOfSort)}
       return arr 
     },
     getHighestPriceProduct: (state,getters) => getters.getProductsSortedByKey('price')[state.products.length - 1].price,
