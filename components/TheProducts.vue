@@ -57,7 +57,6 @@ export default {
         const searchInput = ref('');
         const filterSelectValue = ref('');
         const currentPage = ref(1);
-        const input = ref(null);
         const gridModes = [[3, 6], [4, 8]];
         const currentGridMode = ref(gridModes[0])
         const changeSearchString = ({ target }) => {
@@ -76,7 +75,6 @@ export default {
             searchInput,
             filterSelectValue,
             currentPage,
-            input,
             changeSearchString,
             gridModes,
             currentGridMode,

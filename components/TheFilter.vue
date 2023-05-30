@@ -66,7 +66,7 @@ export default {
     setup() {
         const { $store } = useNuxtApp();
         const priceRange = ref(0);
-        const lowestPrice = computed(() => $store.state.products[0].price)
+        const lowestPrice = computed(() => $store.getters.getProductsSortedByKey('price').reverse()[$store.state.products.length - 1].price)
         const multiRange = ref([]);
         const priseCheckList = ref([]);
         const categoryCheckList = ref([]);

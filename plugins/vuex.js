@@ -44,7 +44,7 @@ const store = createStore({
       if (state.keyOfSort) { console.log('keyOfSort'); arr = getters.getProductsSortedByKey(state.keyOfSort)}
       return arr 
     },
-    getHighestPriceProduct: (state) => state.products[state.products.length - 1].price,
+    getHighestPriceProduct: (state,getters) => getters.getProductsSortedByKey('price')[state.products.length - 1].price,
     getProductsOfCategory: state => categoryId => state.products.filter(product => +product.categoryId === categoryId),
     getProductsSortedByKey: (state) => key => {
       let arr = state.products    
