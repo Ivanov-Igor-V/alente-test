@@ -1,10 +1,8 @@
 <template>
-    <div>
-        <button class="button" :class="[type === 'primary' ? 'primary' : 'secondary']" :style="{ borderRadius }">
-            <slot name="icon" />
-            <slot />
-        </button>
-    </div>
+    <button class="button" :class="[type === 'primary' ? 'primary' : 'secondary']" :style="{ borderRadius }">
+        <slot name="icon" />
+        <slot />
+    </button>
 </template>
 <script>
 export default {

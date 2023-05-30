@@ -6,13 +6,18 @@ const store = createStore({
       searchString: '',
       brandIds: [],
       categoryIds: [],
+      defaultPriceRange: [0, 100],
       priceRange: [0, 100],
-      keyOfSort: ''
+      keyOfSort: '',
+      grade: null
     };
   },
   mutations: {
     writeProducts(state, payload) {
       state.products = payload
+    },
+    changeDetaultPriceRange(state, payload) {
+      state.defaultPriceRange = payload
     },
     changePriceRange(state, payload) {
       state.priceRange = payload
@@ -32,6 +37,17 @@ const store = createStore({
     changeKeyOfSort(state, payload) {
       state.keyOfSort = payload
     },
+    pickGradeForFilter(state, payload) {
+      state.grade = payload
+    },
+    clearAllFilters(state) {
+      state.searchString = ''
+      state.brandIds= []
+      state.categoryIds= []
+      state.priceRange= state.defaultPriceRange
+      state.keyOfSort= ''
+      state.grade = null
+    }
   },
   getters: {
     getProducts: (state,getters) => {
@@ -41,6 +57,7 @@ const store = createStore({
       if (state.searchString) {arr = arr.filter(product => product.title.toUpperCase().match(state.searchString.toUpperCase()))}
       if (state.brandIds.length) {arr = arr.filter(product => state.brandIds.includes(product.brandId))}
       if (state.categoryIds.length) {arr = arr.filter(product => state.categoryIds.includes(product.categoryId))}
+      if (state.grade) {arr = arr.filter(product => product.rating >= state.grade && product.rating <= state.grade + 1)}
       if (state.keyOfSort) { console.log('keyOfSort'); arr = getters.getProductsSortedByKey(state.keyOfSort)}
       return arr 
     },

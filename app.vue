@@ -2,7 +2,10 @@
   <div class="products">
     <TheHeader class="products__header" />
     <div v-if="data" class="products__main">
-      <TheFilter class="products__filter" />
+      <div class="products__aside">
+        <TheFilter class="products__filter" />
+        <TheButton @click="clearFilters" class="products__filter-button">CLEAR ALL FILTERS</TheButton>
+      </div>
       <TheProducts />
     </div>
     <div v-else>
@@ -20,19 +23,28 @@ export default {
     const { data, error } = useFetch(`${publicConfig.API_BASE_URL}/product`, {
       onResponse({ response }) {
         $store.commit('writeProducts', response._data);
-        const highestPrice = $store.getters.getHighestPriceProduct
-        $store.commit('changePriceRange', [0, highestPrice]);
+        $store.commit('changeDetaultPriceRange', [0, $store.getters.getHighestPriceProduct]);
+        $store.commit('changePriceRange', [0, $store.getters.getHighestPriceProduct]);
       },
     })
-    return { data }
+
+    const clearFilters = () => {
+      $store.commit('clearAllFilters');
+      //TODO Осуществить двустороннее связывание со стором
+    }
+    return { data, clearFilters }
   }
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .products {
   &__header {
     margin-bottom: 50px;
+  }
+
+  &__aside {
+    margin-right: 30px;
   }
 
   &__main {
@@ -42,7 +54,15 @@ export default {
   }
 
   &__filter {
-    margin-right: 30px;
+    margin-bottom: 29px;
+  }
+
+  &__filter-button {
+    border-radius: 8px;
+    height: 56px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.135216);
+    font-size: 18px;
+    line-height: 21px;
   }
 }
 </style>

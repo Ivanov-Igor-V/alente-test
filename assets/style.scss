@@ -27,7 +27,6 @@ body {
     max-width: 1650px;
     margin: 0 auto;
     background: var(--color-3);
-
 }
 
 h4 {
@@ -39,8 +38,10 @@ select {
     border-radius: 8px;
     background: var(--color-4);
 
-    &:focus, &:focus-visible, &:active {
-    border: none;
+    &:focus,
+    &:focus-visible,
+    &:active {
+        border: none;
     }
 }
 
@@ -53,4 +54,14 @@ button {
     background: none;
     border: none;
     cursor: pointer;
+}
+
+.el-select {
+    * {
+        border: none;
+        outline: none;
+    }
+    border: none;
+    outline: none;
+    --el-select-input-focus-border-color: transparent;
 }
